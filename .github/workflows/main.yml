@@ -1,0 +1,31 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI-CD-Pipeline-to-AWS-ElasticBeastalk
+env:
+ EB_PACKAGE_S3_BUCKET_NAME : "aleksey-flask-application-packages"
+ EB_APPLICATION_NAME       : "MyFlask"
+ EB_ENVIROMENT_NAME        : "MyFlask-env"
+ DEPLOY_PACKAGE_NAME       : "flask_app_${{ github.sha }}.zip"
+ AWS_REGION_NAME           : "eu-north-1"
+ 
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+
+  my_ci_part:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Git clone our repo
+      uses: actions/checkout@v3
+      
+    - name: Create ZIP deployment package
+      run : zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./ -x *.git*
+      
+  
